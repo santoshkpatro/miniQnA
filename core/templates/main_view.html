@@ -1,0 +1,28 @@
+<form action="{% url 'qn_add_view' %}" method="post">
+    {% csrf_token %}
+    <label for="text">Question</label>
+    <input type="text" name="question" placeholder="Enter your question">
+    <button type="submit">Add</button>
+</form>
+
+{% for question in question_list %}
+    <div>
+        <p><strong>Date : </strong>{{question.pub_date}}</>
+        <p><strong>Question : </strong>{{question.question_text}}</p>
+        <form action="{% url 'ans_add_view' question.id %}" method="post">
+            {% csrf_token %}
+            <label for="text">Write your answers</label>
+            <input type="text" name="answer" placeholder="Enter your answer">
+            <button type="submit">Add</button>
+        </form>
+        <strong>ANSWERS :</strong>
+        {% for ans in question.answer_set.all %}
+            <p><strong>{{ans.answer_text}}</strong> ---- Votes = {{ans.votes}}</p>
+            <form action="{% url 'ans_vote_view' ans.id %}" method="post">
+                {% csrf_token %}
+                <button>Upvote</button>
+            </form>
+        {% endfor %}
+    </div>
+    <br>
+{% endfor %}
